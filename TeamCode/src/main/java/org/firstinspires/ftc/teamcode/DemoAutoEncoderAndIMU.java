@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Sample Auto with IMU & encoders")
+@Autonomous(name="Auto with IMU", group="12417")
 
 public class DemoAutoEncoderAndIMU extends LinearOpMode {
 
@@ -23,7 +23,7 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
     float globalAngle;
-  
+
     private ElapsedTime runtime = new ElapsedTime();
 
     //will use 20:1 HD Hex motor (revrobotics) + 90 mm grip wheels
@@ -49,8 +49,8 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        motorLeft = hardwareMap.dcMotor.get ("motorLeft"); //check with driver hub
-        motorRight = hardwareMap.dcMotor.get("motorRight"); //check with driver hub
+        motorLeft = hardwareMap.dcMotor.get ("L_Motor"); //check with driver hub
+        motorRight = hardwareMap.dcMotor.get("R_Motor"); //check with driver hub
 
         motorLeft.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
 
@@ -89,14 +89,16 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
         telemetry.update();
 
         //variable for how fast the robot will move
-        float DRIVE_SPEED = 0.5;
+        float DRIVE_SPEED = 0.5f;
 
         waitForStart();
 
 //motion code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        encoderDrive(DRIVE_SPEED,  12,  12, 5.0);
+        encoderDrive(DRIVE_SPEED,  12,  12, 5);
+
         rotate(90, TURN_SPEED);
-        encoderDrive(DRIVE_SPEED,  -12,  -12, 5.0);
+
+        encoderDrive(DRIVE_SPEED,  -12,  -12, 5);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -176,7 +178,6 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
 
 
 
-            // Stop all motion;
             motorLeft.setPower(0);
             motorRight.setPower(0);
 

@@ -20,9 +20,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
  * Hall effect sensor: See https://www.adafruit.com/product/158
  * Break Beam sensor: See https://www.amazon.com/Adafruit-Accessories-Break-Beam-Sensor/dp/B01BU6YBWU
  */
-@TeleOp(name = "Sensor: Generic Switch", group = "Sensor")
+@TeleOp(name = "Sensor: Generic Switch", group = "12417")
 //@Disabled
-public class SensorGenericSwitch extends LinearOpMode {
+public class BreakBeam extends LinearOpMode {
 
     /*
      * Main loop

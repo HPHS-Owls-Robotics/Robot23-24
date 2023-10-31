@@ -13,9 +13,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Sample Auto with IMU & encoders")
+@Autonomous(name="Sample Auto with IMU & encoders afds")
 
-public class AutoPurple extends LinearOpMode {
+public class AutoPurpleYellow extends LinearOpMode {
 
     public DcMotor LMotor;
     public DcMotor RMotor;
@@ -87,39 +87,39 @@ public class AutoPurple extends LinearOpMode {
         telemetry.update();
 
         //variable for how fast the robot will move
-        float DRIVE_SPEED = 0.5;
+        float DRIVE_SPEED = 0.5f;
 
         waitForStart();
 
 //motion code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        encoderDrive(DRIVE_SPEED,  12,  12, 5.0);
+        encoderDrive(DRIVE_SPEED,  12,  12, 5.0f);
         rotate(90, TURN_SPEED);
-        encoderDrive(DRIVE_SPEED,  -12,  -12, 5.0);
+        encoderDrive(DRIVE_SPEED,  -12,  -12, 5.0f);
 
-      float theta = 30;
-      switch (stage) 
-      {
-        case 0: //(left)
-          rotate(theta, TURN_SPEED);
-          encoderDrive(DRIVE_SPEED, 12, 12, 5.0)
-          encoderDrive(DRIVE_SPEED, -12, -12, 5.0)
-          rotate(-theta, TURN_SPEED);
-          break;
-        case 1: //(right)
-          rotate(-theta, TURN_SPEED);
-          encoderDrive(DRIVE_SPEED, 12, 12, 5.0)
-          encoderDrive(DRIVE_SPEED, -12, -12, 5.0)
-          rotate(theta, TURN_SPEED);
-          break;
-        case 2: //(center)
-          encoderDrive(DRIVE_SPEED, 18, 18, 5.0)
-          encoderDrive(DRIVE_SPEED, -18, -18, 5.0)
-      }
+      int theta = 30;
+//      switch (stage)
+//      {
+//        case 0: //(left)
+//          rotate(theta, TURN_SPEED);
+//          encoderDrive(DRIVE_SPEED, 12, 12, 5.0f);
+//          encoderDrive(DRIVE_SPEED, -12, -12, 5.0f);
+//          rotate(-theta, TURN_SPEED);
+//          break;
+//        case 1: //(right)
+//          rotate(-theta, TURN_SPEED);
+//          encoderDrive(DRIVE_SPEED, 12, 12, 5.0f);
+//          encoderDrive(DRIVE_SPEED, -12, -12, 5.0f);
+//          rotate(theta, TURN_SPEED);
+//          break;
+//        case 2: //(center)
+//          encoderDrive(DRIVE_SPEED, 18, 18, 5.0f);
+//          encoderDrive(DRIVE_SPEED, -18, -18, 5.0f);
+//      }
 
       //getting backstage
 
       rotate(-90, TURN_SPEED);
-      encoderDrive(DRIVE_SPEED, 
+      encoderDrive(DRIVE_SPEED, 18,18,5);
       
         telemetry.addData("Path", "Complete");
         telemetry.update();
