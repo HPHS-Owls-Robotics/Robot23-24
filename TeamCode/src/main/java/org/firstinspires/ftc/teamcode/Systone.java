@@ -49,6 +49,7 @@ public class Systone extends LinearOpMode
     OpenCvWebcam webcam;
     SkystoneDeterminationPipeline pipeline;
 
+
     @Override
     public void runOpMode()
     {
@@ -121,11 +122,11 @@ public class Systone extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(20,300);
-        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(380,300);
-        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(780,300);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(20,0);
+        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(380,0);
+        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(780,0);
         static final int REGION_WIDTH = 360;
-        static final int REGION_HEIGHT = 300;
+        static final int REGION_HEIGHT = 720;
 
         /*
          * Points which actually define the sample region rectangles, derived from above values
@@ -370,9 +371,26 @@ public class Systone extends LinearOpMode
         {
             return position;
         }
-        public String getAnalysis1()
+        public  String getAnalysis1()
         {
             return " "+avg1R+" "+avg2R+" "+avg3R;
+        }
+
+        public int getLocation()
+        {
+            if (position==SkystonePosition.LEFT)
+            {
+                return 1;
+            }
+            if (position==SkystonePosition.LEFT)
+        {
+            return 2;
+        }
+            if (position==SkystonePosition.LEFT)
+        {
+            return 3;
+        }
+            return 0;
         }
 
     }
