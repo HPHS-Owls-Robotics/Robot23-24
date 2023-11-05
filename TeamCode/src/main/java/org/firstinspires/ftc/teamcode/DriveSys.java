@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,6 +32,10 @@ public class DriveSys {
 
         LMotor = hardwareMap.dcMotor.get("L_Motor");
         RMotor = hardwareMap.dcMotor.get("R_Motor");
+        LMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        LMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //tv - zeropwr change
+        RMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //tv - ''
         //Initialize the IMU and its parameters.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -56,7 +61,11 @@ public class DriveSys {
         int newLeftTarget;
         int newRightTarget;
 
-
+        if(inches<0)
+        {
+            LMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            LMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
             // Determine new target position, and pass to motor controller
             newLeftTarget = LMotor.getCurrentPosition() +(int)(inches * COUNTS_PER_INCH);
             newRightTarget = RMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
@@ -66,11 +75,10 @@ public class DriveSys {
             // Turn On RUN_TO_POSITION
             LMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             RMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int sign = (int) (inches/Math.abs(inches));
             // reset the timeout time and start motion.
             //runtime.reset();
-            LMotor.setPower(sign*DRIVE_SPEED);
-            RMotor.setPower(sign*DRIVE_SPEED);
+            LMotor.setPower(DRIVE_SPEED);
+            RMotor.setPower(DRIVE_SPEED);
 
 
             LMotor.setPower(0);
