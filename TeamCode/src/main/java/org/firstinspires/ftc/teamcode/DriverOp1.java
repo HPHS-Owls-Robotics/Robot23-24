@@ -15,9 +15,10 @@ public class DriverOp1 extends LinearOpMode {
 
     CRServo sweepRight;
     CRServo sweepLeft;
-
+    Servo trapdoor;
     //DigitalChannel breakBeam;
-    float MaxSpeed = 1.0f;
+    float MaxSpeed = 0.7f;
+    float ArmSpeed = 0.3f;
 
 
     @Override
@@ -28,8 +29,9 @@ public class DriverOp1 extends LinearOpMode {
         arm = hardwareMap.dcMotor.get("Arm_Motor");
         sweepRight = hardwareMap.crservo.get("Sweep_1");
         sweepLeft = hardwareMap.crservo.get("Sweep_2");
-
+        trapdoor = hardwareMap.servo.get("Trapdoor");
         float LPwr = 0, RPwr = 0, SPwr=0;
+        trapdoor.setPosition(0.0); //check
         waitForStart();
         while (opModeIsActive()) {
 
@@ -46,33 +48,42 @@ public class DriverOp1 extends LinearOpMode {
             sweepLeft.setDirection(DcMotor.Direction.FORWARD);
 
 
-
             LPwr = gamepad1.left_stick_y * MaxSpeed - gamepad1.left_stick_x * MaxSpeed;
                  RPwr = gamepad1.right_stick_y * MaxSpeed + gamepad1.right_stick_x * MaxSpeed;
 
             if(gamepad1.b)
             {
 
-                SPwr =1f;
+                SPwr =3f;
 
             }
             else
                 SPwr=0f;
 
-
+            if(gamepad1.x){
+                if(trapdoor.getPosition()==0.0){
+                    trapdoor.setPosition(1.0);
+                    sleep(700);
+                    trapdoor.setPosition(0.0);
+                } else{
+                    trapdoor.setPosition(0.0);
+                }
+                sleep(200);
+            }
 
             while(gamepad1.left_bumper)//down
             {
-                arm.setPower(MaxSpeed);
+                arm.setPower(ArmSpeed);
             }
             while(gamepad1.right_bumper)//up
             {
-                arm.setPower(-MaxSpeed);
+                arm.setPower(-ArmSpeed);
             }
+            if(!(gamepad1.left_bumper&&gamepad1.right_bumper))
+                arm.setPower(0);
 
-
-            sweepRight.setPower(-SPwr);
-            sweepLeft.setPower(SPwr);
+            sweepRight.setPower(SPwr);
+            sweepLeft.setPower(-SPwr);
             LMotor.setPower(LPwr);
             RMotor.setPower(RPwr);
 
