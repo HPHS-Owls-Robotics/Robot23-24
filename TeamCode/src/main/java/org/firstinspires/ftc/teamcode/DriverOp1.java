@@ -11,8 +11,10 @@ public class DriverOp1 extends LinearOpMode {
     DcMotor LMotor;
     DcMotor RMotor;
 
-    Servo sweep1;
-    Servo sweep2;
+    DcMotor arm;
+
+    CRServo sweepRight;
+    CRServo sweepLeft;
 
     //DigitalChannel breakBeam;
     float MaxSpeed = 1.0f;
@@ -21,10 +23,15 @@ public class DriverOp1 extends LinearOpMode {
     @Override
 
     public void runOpMode() throws InterruptedException {
+        LMotor = hardwareMap.dcMotor.get("L_Motor");
+        RMotor = hardwareMap.dcMotor.get("R_Motor");
+        arm = hardwareMap.dcMotor.get("Arm_Motor");
+        sweepRight = hardwareMap.crservo.get("Sweep_1");
+        sweepLeft = hardwareMap.crservo.get("Sweep_2");
+
+        float LPwr = 0, RPwr = 0, SPwr=0;
         waitForStart();
         while (opModeIsActive()) {
-            LMotor = hardwareMap.dcMotor.get("motorLeft");
-            RMotor = hardwareMap.dcMotor.get("motorRight");
 
             //breakBeam = hardwareMap.digitalChannel.get("Beam");
 
@@ -33,60 +40,52 @@ public class DriverOp1 extends LinearOpMode {
                 motors[i].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            LMotor.setDirection(DcMotor.Direction.REVERSE);
-            RMotor.setDirection(DcMotor.Direction.FORWARD);
+            LMotor.setDirection(DcMotor.Direction.FORWARD);
+            RMotor.setDirection(DcMotor.Direction.REVERSE);
+            sweepRight.setDirection(DcMotor.Direction.FORWARD);
+            sweepLeft.setDirection(DcMotor.Direction.FORWARD);
 
 
-            float LPwr = 0, RPwr = 0;
 
+            LPwr = gamepad1.left_stick_y * MaxSpeed - gamepad1.left_stick_x * MaxSpeed;
+                 RPwr = gamepad1.right_stick_y * MaxSpeed + gamepad1.right_stick_x * MaxSpeed;
 
-            LPwr = gamepad1.left_stick_y * MaxSpeed + gamepad1.left_stick_x * MaxSpeed;
-            RPwr = gamepad1.left_stick_y * MaxSpeed - gamepad1.left_stick_x * MaxSpeed;
-
-            if (gamepad1.left_stick_y > 0) {
-                LPwr = MaxSpeed;
-                RPwr = MaxSpeed;
-
-            }
-            if (gamepad1.left_stick_y < 0) {
-                LPwr = -MaxSpeed;
-                RPwr = -MaxSpeed;
-
-            }
-            if (gamepad1.left_stick_x > 0) {
-                LPwr = MaxSpeed;
-                RPwr = -MaxSpeed;
-
-            }
-            if (gamepad1.left_stick_x < 0) {
-                LPwr = -MaxSpeed;
-                RPwr = MaxSpeed;
-            }
-
-            RMotor.setPower(RPwr);
-            LMotor.setPower(LPwr);
-
-            if(gamepad1.dpad_down)
+            if(gamepad1.b)
             {
-                sweep();
+
+                SPwr =1f;
+
             }
+            else
+                SPwr=0f;
+
+
+
+            while(gamepad1.left_bumper)//down
+            {
+                arm.setPower(MaxSpeed);
+            }
+            while(gamepad1.right_bumper)//up
+            {
+                arm.setPower(-MaxSpeed);
+            }
+
+
+            sweepRight.setPower(-SPwr);
+            sweepLeft.setPower(SPwr);
+            LMotor.setPower(LPwr);
+            RMotor.setPower(RPwr);
+
+            telemetry.addData("hello", sweepLeft.getPower());
+            telemetry.addData("hello", sweepRight.getPower());
+            telemetry.update();
+
+
+
+
+
         }
 
     }
 
-    public void sweep()
-    {
-
-        if (sweep1.getPosition() != 0f)
-        {
-            sweep1.setPosition(0f);
-            sweep1.setPosition(0f);
-
-        } else
-        {
-            sweep1.setPosition(2f);
-            sweep2.setPosition(2f);
-        }
-
-    }
 }

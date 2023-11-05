@@ -39,10 +39,11 @@ public class OpticSys {
 //    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 170.0, 120.0);
     ContourPipeline myPipeline1;
     ContourPipeline myPipeline2;
-
+    int color;
     //@Override
-    public OpticSys(HardwareMap hardwareMap)
+    public OpticSys(HardwareMap hardwareMap, int c )
     {
+        color=c;
         myPipeline1 = new ContourPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY);
         myPipeline2 = new ContourPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY);
         // OpenCV webcam
@@ -149,10 +150,5 @@ public class OpticSys {
         if(value > max){ value = max; }
         return value;
     }
-    public void AUTONOMOUS_A(){
-    }
-    public void AUTONOMOUS_B(){
-    }
-    public void AUTONOMOUS_C(){
-    }
+
 }

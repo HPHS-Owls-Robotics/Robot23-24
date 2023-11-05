@@ -17,8 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class DemoAutoEncoderAndIMU extends LinearOpMode {
 
-    public DcMotor motorLeft;
-    public DcMotor motorRight;
+    public DcMotor LMotor;
+    public DcMotor RMotor;
 
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
@@ -49,13 +49,13 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        motorLeft = hardwareMap.dcMotor.get ("L_Motor"); //check with driver hub
-        motorRight = hardwareMap.dcMotor.get("R_Motor"); //check with driver hub
+        LMotor = hardwareMap.dcMotor.get ("L_Motor"); //check with driver hub
+        RMotor = hardwareMap.dcMotor.get("R_Motor"); //check with driver hub
 
-        motorLeft.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
+        LMotor.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
 
-        motorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         //The IMU does not initialize instantly. This makes it so the driver can see when they can push Play without errors.
@@ -72,15 +72,15 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
-        motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                motorLeft.getCurrentPosition(),
-                motorRight.getCurrentPosition());
+                LMotor.getCurrentPosition(),
+                RMotor.getCurrentPosition());
         telemetry.update();
 
         //Tells the driver it is ok to start.
@@ -150,40 +150,40 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = motorLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = motorRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            motorLeft.setTargetPosition(newLeftTarget);
-            motorRight.setTargetPosition(newRightTarget);
+            newLeftTarget = LMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = RMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            LMotor.setTargetPosition(newLeftTarget);
+            RMotor.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            LMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            motorLeft.setPower(Math.abs(speed));
-            motorRight.setPower(Math.abs(speed));
+            LMotor.setPower(Math.abs(speed));
+            RMotor.setPower(Math.abs(speed));
 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (motorLeft.isBusy() && motorRight.isBusy())) {
+                    (LMotor.isBusy() && RMotor.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        motorLeft.getCurrentPosition(),
-                        motorRight.getCurrentPosition());
+                        LMotor.getCurrentPosition(),
+                        RMotor.getCurrentPosition());
                 telemetry.update();
             }
 
 
 
-            motorLeft.setPower(0);
-            motorRight.setPower(0);
+            LMotor.setPower(0);
+            RMotor.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
@@ -230,8 +230,8 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
         else return;
 
         //sets power to motors with negative signs properly assigned to make the robot go in the correct direction
-        motorLeft.setPower(leftPower);
-        motorRight.setPower(rightPower);
+        LMotor.setPower(leftPower);
+        RMotor.setPower(rightPower);
 
         //Repeatedly check the IMU until the getAngle() function returns the value specified.
         if (degrees < 0)
@@ -246,8 +246,8 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
 
         //stop the motors after the angle has been found.
 
-        motorLeft.setPower(0);
-        motorRight.setPower(0);
+        LMotor.setPower(0);
+        RMotor.setPower(0);
 
         //sleep for a bit to make sure the robot doesn't over shoot
         sleep(1000); //can adjust

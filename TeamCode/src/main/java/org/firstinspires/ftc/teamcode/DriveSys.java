@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,18 +14,34 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class DriveSys {
 
 
-    public DcMotor motorLeft;
-    public DcMotor motorRight;
+    public DcMotor LMotor;
+    public DcMotor RMotor;
 
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
     float globalAngle;
-    OpticSysTest opticSys;
+    OpticSys opticSys;
+    AprilTag aprilTag;
 
 
-    public DriveSys(HardwareMap hardwareMap)
+    public DriveSys(HardwareMap hardwareMap, int c)
     {
-        opticSys = new OpticSysTest(hardwareMap);
+        opticSys = new OpticSys(hardwareMap, c);
+        aprilTag = new AprilTag(hardwareMap);
+
+        LMotor = hardwareMap.dcMotor.get("L_Motor");
+        RMotor = hardwareMap.dcMotor.get("R_Motor");
+        //Initialize the IMU and its parameters.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -35,30 +52,35 @@ public class DriveSys {
     static final float     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415f);
     static final float     DRIVE_SPEED             = 0.6f; //can adjust
     static final float     TURN_SPEED              = 0.2f; //can adjust
-    public void drive( float Inches) {
-        int newTarget;
+    public void drive(float inches) {
+        int newLeftTarget;
+        int newRightTarget;
+
+
             // Determine new target position, and pass to motor controller
-            newTarget = motorLeft.getCurrentPosition() + (int)(Inches * COUNTS_PER_INCH);
-            motorLeft.setTargetPosition(newTarget);
-            motorRight.setTargetPosition(newTarget);
+            newLeftTarget = LMotor.getCurrentPosition() +(int)(inches * COUNTS_PER_INCH);
+            newRightTarget = RMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+            LMotor.setTargetPosition(newLeftTarget);
+            RMotor.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+            LMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int sign = (int) (inches/Math.abs(inches));
             // reset the timeout time and start motion.
-            runtime.reset();
-            motorLeft.setPower(Math.abs(DRIVE_SPEED));
-            motorRight.setPower(Math.abs(DRIVE_SPEED));
+            //runtime.reset();
+            LMotor.setPower(sign*DRIVE_SPEED);
+            RMotor.setPower(sign*DRIVE_SPEED);
 
 
-            motorLeft.setPower(0);
-            motorRight.setPower(0);
+            LMotor.setPower(0);
+            RMotor.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
+            LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
 
     //This method reads the IMU getting the angle. It automatically adjusts the angle so that it is between -180 and +180.
     public float getAngle()
@@ -100,8 +122,8 @@ public class DriveSys {
         else return;
 
         //sets power to motors with negative signs properly assigned to make the robot go in the correct direction
-        motorLeft.setPower(leftPower);
-        motorRight.setPower(rightPower);
+        LMotor.setPower(leftPower);
+        RMotor.setPower(rightPower);
 
         //Repeatedly check the IMU until the getAngle() function returns the value specified.
         if (degrees < 0)
@@ -115,8 +137,8 @@ public class DriveSys {
 
         //stop the motors after the angle has been found.
 
-        motorLeft.setPower(0);
-        motorRight.setPower(0);
+        LMotor.setPower(0);
+        RMotor.setPower(0);
 
         //sleep for a bit to make sure the robot doesn't over sh
 
@@ -132,11 +154,11 @@ public class DriveSys {
         globalAngle = 0;
     }
 
-    public  int driveToLocation()
+    public  int driveToProp()
     {
-        int location =0;
-
-        if(location==2)
+        opticSys.startIt();
+        int location = opticSys.run();
+        if(location==1)
         {
             rotate(45);
             drive(10);
@@ -150,7 +172,39 @@ public class DriveSys {
         {
             drive(12);
         }
-        return location;
+        return opticSys.run();
+    }
+    public int driveFromProp()
+    {
+        int location = opticSys.run();
+        if(location==1)
+        {
+            drive(-10);
+            rotate(-45);
+
+        }
+        else if(location==3)
+        {
+            drive(-10);
+            rotate(45);
+
+        }
+        else
+        {
+            drive(-12);
+        }
+        return opticSys.run();
+    }
+    public int driveToTag()
+    {
+        aprilTag.initAprilTag();
+        double x= aprilTag.getY();
+        double y= aprilTag.getY();
+        int angle=0;
+        float distance=0;
+        rotate(angle);
+        drive(distance);
+        return aprilTag.getTag();
     }
 
 
