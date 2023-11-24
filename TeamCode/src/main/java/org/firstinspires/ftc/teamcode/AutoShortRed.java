@@ -13,9 +13,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Auto with IMU", group="12417")
+@Autonomous
 
-public class DemoAutoEncoderAndIMU extends LinearOpMode {
+public class AutoShortRed extends LinearOpMode {
 
     public DcMotor LMotor;
     public DcMotor RMotor;
@@ -94,11 +94,11 @@ public class DemoAutoEncoderAndIMU extends LinearOpMode {
         waitForStart();
 
 //motion code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        encoderDrive(DRIVE_SPEED,  12,  12, 5);
-
-        rotate(90, TURN_SPEED);
-
         encoderDrive(DRIVE_SPEED,  -12,  -12, 5);
+
+        rotate(-90, TURN_SPEED);
+
+        encoderDrive(DRIVE_SPEED,  -52,  -52, 5);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

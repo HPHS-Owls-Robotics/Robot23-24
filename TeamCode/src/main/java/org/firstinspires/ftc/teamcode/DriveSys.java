@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -25,17 +26,8 @@ public class DriveSys {
     AprilTag aprilTag;
 
 
-    public DriveSys(HardwareMap hardwareMap, int c)
+    public DriveSys(HardwareMap hardwareMap)
     {
-        opticSys = new OpticSys(hardwareMap, c);
-        aprilTag = new AprilTag(hardwareMap);
-
-        LMotor = hardwareMap.dcMotor.get("L_Motor");
-        RMotor = hardwareMap.dcMotor.get("R_Motor");
-        LMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        RMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        LMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //tv - zeropwr change
-        RMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //tv - ''
         //Initialize the IMU and its parameters.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -47,6 +39,25 @@ public class DriveSys {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+
+        LMotor = hardwareMap.dcMotor.get ("L_Motor"); //check with driver hub
+        RMotor = hardwareMap.dcMotor.get("R_Motor"); //check with driver hub
+
+        LMotor.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
+
+        LMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        
+        LMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        //variable for how fast the robot will move
+        float DRIVE_SPEED = 0.5f;
+
     }
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -77,10 +88,11 @@ public class DriveSys {
             RMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // reset the timeout time and start motion.
             //runtime.reset();
+        while(newLeftTarget!= LMotor.getTargetPosition()) {
             LMotor.setPower(DRIVE_SPEED);
             RMotor.setPower(DRIVE_SPEED);
 
-
+        }
             LMotor.setPower(0);
             RMotor.setPower(0);
 

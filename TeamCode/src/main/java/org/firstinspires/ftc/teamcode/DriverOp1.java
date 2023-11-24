@@ -15,6 +15,8 @@ public class DriverOp1 extends LinearOpMode {
 
     CRServo sweepRight;
     CRServo sweepLeft;
+
+
     Servo trapdoor;
     //DigitalChannel breakBeam;
     float MaxSpeed = 0.7f;
@@ -30,15 +32,15 @@ public class DriverOp1 extends LinearOpMode {
         sweepRight = hardwareMap.crservo.get("Sweep_1");
         sweepLeft = hardwareMap.crservo.get("Sweep_2");
         trapdoor = hardwareMap.servo.get("Trapdoor");
-        float LPwr = 0, RPwr = 0, SPwr=0;
+        float LPwr = 0, RPwr = 0, SPwr=0, LLPwr, LRPwr, RLPwr, RRPwr;
         trapdoor.setPosition(0.0); //check
         waitForStart();
         while (opModeIsActive()) {
 
             //breakBeam = hardwareMap.digitalChannel.get("Beam");
 
-            DcMotor[] motors = {LMotor, RMotor};
-            for (int i = 0; i < 2; i++) {
+            DcMotor[] motors = {LMotor, RMotor, arm};
+            for (int i = 0; i < 3; i++) {
                 motors[i].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
@@ -48,8 +50,11 @@ public class DriverOp1 extends LinearOpMode {
             sweepLeft.setDirection(DcMotor.Direction.FORWARD);
 
 
-            LPwr = gamepad1.left_stick_y * MaxSpeed - gamepad1.left_stick_x * MaxSpeed;
-                 RPwr = gamepad1.right_stick_y * MaxSpeed + gamepad1.right_stick_x * MaxSpeed;
+            LLPwr = gamepad1.left_stick_y*MaxSpeed - gamepad1.left_stick_x*MaxSpeed;
+            LRPwr = gamepad1.left_stick_y*MaxSpeed + gamepad1.left_stick_x*MaxSpeed;
+
+            RLPwr =( gamepad1.right_stick_y*MaxSpeed - gamepad1.right_stick_x*MaxSpeed);
+            RRPwr =( gamepad1.right_stick_y*MaxSpeed + gamepad1.right_stick_x*MaxSpeed);
 
             if(gamepad1.b)
             {
@@ -57,10 +62,16 @@ public class DriverOp1 extends LinearOpMode {
                 SPwr =3f;
 
             }
+            else if(gamepad1.x)
+            {
+
+                SPwr =-3f;
+
+            }
             else
                 SPwr=0f;
 
-            if(gamepad1.x){
+            if(gamepad1.y){
                 if(trapdoor.getPosition()==0.0){
                     trapdoor.setPosition(1.0);
                     sleep(700);
@@ -84,8 +95,8 @@ public class DriverOp1 extends LinearOpMode {
 
             sweepRight.setPower(SPwr);
             sweepLeft.setPower(-SPwr);
-            LMotor.setPower(LPwr);
-            RMotor.setPower(RPwr);
+            LMotor.setPower(LLPwr + RLPwr);
+            RMotor.setPower(LRPwr + RRPwr);
 
             telemetry.addData("hello", sweepLeft.getPower());
             telemetry.addData("hello", sweepRight.getPower());
