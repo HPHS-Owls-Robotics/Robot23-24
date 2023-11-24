@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
 
-public class OpticSys {
+public class OpticSysRed {
     private OpenCvCamera webcam1;
     private OpenCvCamera webcam2;
 
@@ -41,7 +41,7 @@ public class OpticSys {
     ContourPipeline myPipeline2;
     int color;
     //@Override
-    public OpticSys(HardwareMap hardwareMap, int c )
+    public OpticSysRed(HardwareMap hardwareMap, int c )
     {
         color=c;
         myPipeline1 = new ContourPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY);
