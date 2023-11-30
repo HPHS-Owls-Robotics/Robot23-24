@@ -24,7 +24,7 @@ public class DriverOp2gamepads extends LinearOpMode {
     Servo drone;
     Servo rr;
 
-//    DigitalChannel breakBeam;
+  DigitalChannel breakBeam;
 
 
     @Override
@@ -44,7 +44,7 @@ public class DriverOp2gamepads extends LinearOpMode {
         drone = hardwareMap.servo.get("Drone");
         rr = hardwareMap.servo.get("RR");
 
-//        breakBeam = hardwareMap.digitalChannel.get("BreakBeam");
+        breakBeam = hardwareMap.digitalChannel.get("BreakBeam");
 
 //speeds
         float MaxSpeed, SPwr=0, LLPwr, LRPwr, RLPwr, RRPwr, APwr;
@@ -77,9 +77,8 @@ public class DriverOp2gamepads extends LinearOpMode {
             RLPwr = gamepad1.right_stick_y*MaxSpeed - gamepad1.right_stick_x*MaxSpeed;
             RRPwr = gamepad1.right_stick_y*MaxSpeed + gamepad1.right_stick_x*MaxSpeed;
 
-//            isBeamBroke = breakBeam.getState();
+           isBeamBroke = breakBeam.getState();
 
-//gamepad 1 -- ooooooooooonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee --
             if(gamepad1.x){
                 //
             }
@@ -88,15 +87,15 @@ public class DriverOp2gamepads extends LinearOpMode {
             }
             if(gamepad1.b){
                 //sweep mode 1
-//                if(isBeamBroke)
-//                {
-//                    rr.setPosition(0);
-//                    telemetry.addLine("Beam broke");
-//                } else
-//                {
-//                    rr.setPosition(1);
-//                    telemetry.addLine("Beam intact");
-//                }
+                if(isBeamBroke)
+                {
+                    rr.setPosition(0);
+                    telemetry.addLine("Beam broke");
+                } else
+                {
+                    rr.setPosition(1);
+                    telemetry.addLine("Beam intact");
+                }
             }
             if(gamepad1.a){
                 //sweep mode 2
@@ -153,6 +152,7 @@ public class DriverOp2gamepads extends LinearOpMode {
             if(gamepad2.dpad_up)
             {
                 //suspension up
+
             }
             if(gamepad2.dpad_down)
             {

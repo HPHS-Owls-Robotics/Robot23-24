@@ -13,13 +13,13 @@ public class BlueCloseFull extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         driveSys = new DriveSys(hardwareMap);
-
         waitForStart();
         telemetry.update();
-        if (opModeIsActive()) {
+        while (opModeIsActive()) {
             int hello=driveSys.drive(25);
             telemetry.addData("goodBye", hello);
-            telemetry.addData("hello", driveSys.getPos());
+            telemetry.addData("L", driveSys.getPos());
+            telemetry.addData("R", driveSys.getRPos());
             telemetry.update();
             sleep(1000);
         }

@@ -42,8 +42,10 @@ public class DriveSys {
 
         LMotor = hardwareMap.dcMotor.get ("L_Motor"); //check with driver hub
         RMotor = hardwareMap.dcMotor.get("R_Motor"); //check with driver hub
-        LMotor.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
-        RMotor.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
+
+
+        LMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        RMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         LMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -70,29 +72,23 @@ public class DriveSys {
         int newLeftTarget;
         int newRightTarget;
 
-        if(inches<0)
-        {
-            LMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            RMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
             // Determine new target position, and pass to motor controller
-            newLeftTarget = LMotor.getCurrentPosition() +(int)(inches * COUNTS_PER_INCH);
-            newRightTarget = RMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = LMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-        newRightTarget = RMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+        //newLeftTarget = LMotor.getCurrentPosition() - (int)(inches * COUNTS_PER_INCH);
+        newLeftTarget = LMotor.getTargetPosition()+500;
+        newRightTarget = RMotor.getTargetPosition()+500;
         LMotor.setTargetPosition(newLeftTarget);
         RMotor.setTargetPosition(newRightTarget);
 
         // Turn On RUN_TO_POSITION
         LMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       // LMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+       // RMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // reset the timeout time and start motion.
-        runtime.reset();
-        LMotor.setPower(Math.abs(0.3f));
-        RMotor.setPower(Math.abs(0.25f));
+       // runtime.reset();
+        LMotor.setPower(-0.25f);
+        RMotor.setPower(0.25f);
 
         //LMotor.setPower(0);
         //RMotor.setPower(0);
@@ -101,7 +97,8 @@ public class DriveSys {
         LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            return newLeftTarget;
+            //return newLeftTarget;
+        return 0;
 
         }
 
@@ -231,9 +228,13 @@ public class DriveSys {
     }
 
     public int getPos()
-    {
-        return LMotor.getCurrentPosition();
-    }
+    {return LMotor.getCurrentPosition();}
+    public int getRPos()
+    {return RMotor.getCurrentPosition();}
+
+
 
 
 }
+
+
