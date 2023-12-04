@@ -28,8 +28,9 @@ public class DriveSys {
 
     public DriveSys(HardwareMap hardwareMap)
     {
+        opticSys = new OpticSys(hardwareMap,0);
         //Initialize the IMU and its parameters.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters()  ,n;
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json";
@@ -42,17 +43,20 @@ public class DriveSys {
 
         LMotor = hardwareMap.dcMotor.get ("L_Motor"); //check with driver hub
         RMotor = hardwareMap.dcMotor.get("R_Motor"); //check with driver hub
-        LMotor.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
+
+        LMotor.setDirection(DcMotor.Direction.FORWARD); //to be tested with chassis
         RMotor.setDirection(DcMotor.Direction.REVERSE); //to be tested with chassis
 
         LMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        
         LMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
         //variable for how fast the robot will move
         float DRIVE_SPEED = 0.5f;
 
@@ -64,44 +68,32 @@ public class DriveSys {
     static final float     DRIVE_GEAR_REDUCTION    = 1.0f;
     static final float     WHEEL_DIAMETER_INCHES   = 3.54f;
     static final float     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415f);
-    static final float     DRIVE_SPEED             = 0.5f; //can adjust
+    static final float     DRIVE_SPEED             = 0.6f; //can adjust
     static final float     TURN_SPEED              = 0.2f; //can adjust
-    public int drive(float inches) {
+    public void drive(float inches) {
         int newLeftTarget;
         int newRightTarget;
 
-        if(inches<0)
-        {
-            LMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            RMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
+
             // Determine new target position, and pass to motor controller
-            newLeftTarget = LMotor.getCurrentPosition() +(int)(inches * COUNTS_PER_INCH);
+            newLeftTarget = LMotor.getCurrentPosition() -(int)(inches * COUNTS_PER_INCH);
             newRightTarget = RMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+            LMotor.setTargetPosition(-newLeftTarget);
+            RMotor.setTargetPosition(newRightTarget);
 
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = LMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-        newRightTarget = RMotor.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-        LMotor.setTargetPosition(newLeftTarget);
-        RMotor.setTargetPosition(newRightTarget);
-
-        // Turn On RUN_TO_POSITION
-        LMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // reset the timeout time and start motion.
-        runtime.reset();
-        LMotor.setPower(Math.abs(0.3f));
-        RMotor.setPower(Math.abs(0.25f));
-
-        //LMotor.setPower(0);
-        //RMotor.setPower(0);
+            // Turn On RUN_TO_POSITION
+            LMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       // LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            // reset the timeout time and start motion.
+            //runtime.reset();
+        LMotor.setPower(0.6);
+        RMotor.setPower(0.6);
 
             // Turn off RUN_TO_POSITION
-        LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            return newLeftTarget;
+            LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
@@ -229,10 +221,12 @@ public class DriveSys {
         drive(distance);
         return aprilTag.getTag();
     }
-
     public int getPos()
     {
         return LMotor.getCurrentPosition();
+    }    public int getRPos()
+    {
+        return RMotor.getCurrentPosition();
     }
 
 

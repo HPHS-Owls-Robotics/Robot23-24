@@ -41,7 +41,7 @@ public class OpticSys {
     ContourPipeline myPipeline2;
     int color;
     //@Override
-    public OpticSys(HardwareMap hardwareMap, int c )
+    public OpticSys(HardwareMap hardwareMap , int c)
     {
         color=c;
         myPipeline1 = new ContourPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY);

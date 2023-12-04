@@ -1,5 +1,15 @@
+package org.firstinspires.ftc.teamcode;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -15,6 +25,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -28,7 +39,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -41,11 +51,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 
-@Autonomous(name="Auto Long Blue", group="12417")
+@Autonomous(name="TestAmalgamation", group="12417")
 
-public class AutoLongBlue extends LinearOpMode {
+public class Amalgamation extends LinearOpMode {
 
     public DcMotor LMotor;
     public DcMotor RMotor;
@@ -129,12 +140,37 @@ public class AutoLongBlue extends LinearOpMode {
         myPipeline1.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
         // Webcam Streaming
 
+        /*
+         * Open the connection to the camera device. New in v1.4.0 is the ability
+         * to open the camera asynchronously, and this is now the recommended way
+         * to do it. The benefits of opening async include faster init time, and
+         * better behavior when pressing stop during init (i.e. less of a chance
+         * of tripping the stuck watchdog)
+         *
+         * If you really want to open synchronously, the old method is still available.
+         */
         webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                webcam1.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+                /*
+                 * Tell the webcam to start streaming images to us! Note that you must make sure
+                 * the resolution you specify is supported by the camera. If it is not, an exception
+                 * will be thrown.
+                 *
+                 * Keep in mind that the SDK's UVC driver (what OpenCvWebcam uses under the hood) only
+                 * supports streaming from the webcam in the uncompressed YUV image format. This means
+                 * that the maximum resolution you can stream at and still get up to 30FPS is 480p (640x480).
+                 * Streaming at e.g. 720p will limit you to up to 10FPS and so on and so forth.
+                 *
+                 * Also, we specify the rotation that the webcam is used in. This is so that the image
+                 * from the camera sensor can be rotated such that it is always displayed with the image upright.
+                 * For a front facing camera, rotation is defined assuming the user is looking at the screen.
+                 * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
+                 * away from the user.
+                 */
+                webcam1.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -144,7 +180,7 @@ public class AutoLongBlue extends LinearOpMode {
                  * This will be called if the camera could not be opened
                  */
             }
-        }        //Initialize the IMU and its parameters.
+        });        //Initialize the IMU and its parameters.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -258,7 +294,6 @@ public class AutoLongBlue extends LinearOpMode {
         if (opModeIsActive()) {
 
         // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
             // Determine new target position, and pass to motor controller
             newLeftTarget = LMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newRightTarget = RMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
@@ -283,6 +318,8 @@ public class AutoLongBlue extends LinearOpMode {
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                         LMotor.getCurrentPosition(),
                         RMotor.getCurrentPosition());
+                telemetry.addData("no camera=1, camera1=2, camera2=3, error=-1", run());
+
                 telemetry.update();
             }
 
@@ -295,7 +332,7 @@ public class AutoLongBlue extends LinearOpMode {
             LMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
+       // visionPortal.close();
 
 
         }
@@ -384,7 +421,7 @@ public class AutoLongBlue extends LinearOpMode {
         // Create the vision portal the easy way.
         if (USE_WEBCAM) {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                    h.get(WebcamName.class, "Webcam 1"), aprilTag);
+                    hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     BuiltinCameraDirection.BACK, aprilTag);
@@ -461,24 +498,10 @@ public class AutoLongBlue extends LinearOpMode {
     }
 
 }
-package org.firstinspires.ftc.teamcode;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvPipeline;
-
-import java.util.ArrayList;
-import java.util.List;
 
 // Credits to team 7303 RoboAvatars, adjusted by team 3954 Pink to the Future
- class ContourPipeline extends OpenCvPipeline {
+ class ContourPipeline1 extends OpenCvPipeline {
 
     private static int CAMERA_WIDTH  = 640; // width  of wanted camera resolution
     private static int CAMERA_HEIGHT = 360; // height of wanted camera resolution
@@ -532,7 +555,7 @@ import java.util.List;
 
     private final Object sync = new Object();
 
-    public ContourPipeline(double borderLeftX, double borderRightX, double borderTopY, double borderBottomY) {
+    public ContourPipeline1(double borderLeftX, double borderRightX, double borderTopY, double borderBottomY) {
         this.borderLeftX = borderLeftX;
         this.borderRightX = borderRightX;
         this.borderTopY = borderTopY;
