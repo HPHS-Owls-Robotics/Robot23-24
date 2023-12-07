@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="Driving222", group="12417")
@@ -21,7 +22,7 @@ public class DriverOp2 extends LinearOpMode {
     CRServo intake;
     CRServo plane;
     Servo trapdoor;
-    //DigitalChannel breakBeam;
+    DigitalChannel breakBeam;
     float MaxSpeed = 0.7f;
     float ArmSpeed = 0.3f;
 
