@@ -47,7 +47,7 @@ public class DriverOp2gamepads extends LinearOpMode {
         breakBeam = hardwareMap.digitalChannel.get("BreakBeam");
 
 //speeds
-        float MaxSpeed, SPwr=0, LLPwr, LRPwr, RLPwr, RRPwr, APwr;
+        float MaxSpeed, SPwr=5f, LLPwr, LRPwr, RLPwr, RRPwr, APwr;
         trapdoor.setPosition(0.0); //check
         MaxSpeed = 0.7f;
         APwr = 0.3f;
