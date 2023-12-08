@@ -161,13 +161,13 @@ public class DriverOp2gamepads extends LinearOpMode {
 
             if(gamepad2.left_bumper)
             {
-                //Arm up
-                Arm.setPower(APwr);
+                //Arm down
+                Arm.setPower(-APwr);
             }
             if(gamepad2.right_bumper)
             {
-                //Arm down
-                Arm.setPower(-APwr);
+                //Arm up
+                Arm.setPower(APwr);
             }
             if(gamepad2.left_bumper==gamepad2.right_bumper){
                 Arm.setPower(0);
@@ -181,6 +181,9 @@ public class DriverOp2gamepads extends LinearOpMode {
 
 //            telemetry.addData("hello", sweepLeft.getPower());
 //            telemetry.addData("hello", sweepRight.getPower());
+
+            telemetry.addData("break beam state:", breakBeam.getState());
+            telemetry.addData("break beam mode:", breakBeam.getMode());
             telemetry.update();
 
 
