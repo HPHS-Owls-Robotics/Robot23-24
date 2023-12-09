@@ -47,7 +47,7 @@ public class DriverOp2gamepads extends LinearOpMode {
         breakBeam = hardwareMap.digitalChannel.get("BreakBeam");
 
 //speeds
-        float MaxSpeed, SPwr=0, LLPwr, LRPwr, RLPwr, RRPwr, APwr;
+        float MaxSpeed, SPwr=5f, LLPwr, LRPwr, RLPwr, RRPwr, APwr;
         trapdoor.setPosition(0.0); //check
         MaxSpeed = 0.7f;
         APwr = 0.3f;
@@ -87,20 +87,25 @@ public class DriverOp2gamepads extends LinearOpMode {
                 //
             }
             if(gamepad1.b){
-                //sweep mode 1
-                if(!breakBeam.getState())
-                {
-                    rr.setPosition(2);
-                    telemetry.addLine("Beam intact");
-                } else
-                {
+//                //sweep mode 1
+//                if(!breakBeam.getState())
+//                {
+//                    rr.setPosition(2);
+//                    telemetry.addLine("Beam intact");
+//                } else
+//                {
+//                    rr.setPosition(0);
+//                    telemetry.addLine("Beam broke");
+//                }
+                if(rr.getPosition()==2){
                     rr.setPosition(0);
-                    telemetry.addLine("Beam broke");
+                } else {
+                    rr.setPosition(2);
                 }
             }
             if(gamepad1.a){
                 //sweep mode 2
-                rr.setPosition(0.52);
+                rr.setPosition(0.515);
             }
 
             if(gamepad1.dpad_up){
@@ -114,12 +119,12 @@ public class DriverOp2gamepads extends LinearOpMode {
 
             if(gamepad1.left_bumper){
                 //sweep out
-                Sweeper.setPower(-SPwr);
+                Sweeper.setPower(SPwr);
             }
             if(gamepad1.right_bumper)
             {
                 //sweep in
-                Sweeper.setPower(SPwr);
+                Sweeper.setPower(-SPwr);
             }
             if(gamepad1.left_bumper==gamepad1.right_bumper){
                 Sweeper.setPower(0);
@@ -129,7 +134,7 @@ public class DriverOp2gamepads extends LinearOpMode {
             if(gamepad2.x)
             {
                 //drone
-                drone.setPosition(2);
+                drone.setPosition(0);
             }
             if(gamepad2.y)
             {
@@ -142,7 +147,7 @@ public class DriverOp2gamepads extends LinearOpMode {
             if(gamepad2.b){
                 if(trapdoor.getPosition()==0.0){
                     trapdoor.setPosition(1.0);
-                    sleep(700);
+                    sleep(800);
                     trapdoor.setPosition(0.0);
                 } else{
                     trapdoor.setPosition(0.0);
@@ -161,13 +166,13 @@ public class DriverOp2gamepads extends LinearOpMode {
 
             if(gamepad2.left_bumper)
             {
-                //Arm up
-                Arm.setPower(APwr);
+                //Arm down
+                Arm.setPower(-APwr);
             }
             if(gamepad2.right_bumper)
             {
-                //Arm down
-                Arm.setPower(-APwr);
+                //Arm up
+                Arm.setPower(APwr);
             }
             if(gamepad2.left_bumper==gamepad2.right_bumper){
                 Arm.setPower(0);
@@ -181,6 +186,9 @@ public class DriverOp2gamepads extends LinearOpMode {
 
 //            telemetry.addData("hello", sweepLeft.getPower());
 //            telemetry.addData("hello", sweepRight.getPower());
+
+            telemetry.addData("break beam state:", breakBeam.getState());
+            telemetry.addData("break beam mode:", breakBeam.getMode());
             telemetry.update();
 
 
