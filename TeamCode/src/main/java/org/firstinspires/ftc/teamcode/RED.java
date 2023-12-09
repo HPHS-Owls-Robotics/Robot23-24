@@ -31,7 +31,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 @Autonomous
-public class OpticSysRed1  extends LinearOpMode {
+public class R  extends LinearOpMode {
     private OpenCvCamera webcam1;
     private OpenCvCamera webcam2;
 
@@ -212,7 +212,7 @@ public class OpticSysRed1  extends LinearOpMode {
 //                encoderDrive(1,-24,-24,5);
         if(opModeIsActive())
         {
-            //encoderDrive(DRIVE_SPEED,  -36,  -36, 5);
+            //encoderDrive(DRIVE_SPEED,  -24,  -24, 5);
             sleep(200);
             double go = run();
             telemetry.addData("location", run());
@@ -235,40 +235,34 @@ public class OpticSysRed1  extends LinearOpMode {
                 sleep(3000);
                 go= run();
                 telemetry.addData("straight ahead",go);
+                if(go==2)
+                {
+                    rotate(45,DRIVE_SPEED);
+                    encoderDrive(1,-12,-12,5);
+                    encoderDrive(1,12,12,5);
+                    rotate(-135,DRIVE_SPEED);
+
+                }
+                else
+                {
+                    rotate(-45,DRIVE_SPEED);
+                    encoderDrive(1,-12,-12,5);
+                    encoderDrive(1,12,12,5);
+                    rotate(-45,DRIVE_SPEED);    
+                }
+                //LONG
+                //encoderDrive(1,-50,-50,5);                
+                //SHORT
+                //encoderDrive(1,-36,-36,5);
+                //EDGE
+                //rotate(-90,DRIVE_SPEED);
+                //encoderDrive(1,24,24,5);
                 telemetry.update();
                 sleep(3000);
 
             }
 
 
-//            if(myPipeline2.getRectMidpointY()>50)
-//            {
-//                telemetry.addData("rectangle midpoint", myPipeline1.getRectMidpointX());
-//                telemetry.update();
-//                encoderDrive(DRIVE_SPEED,  -12,  -12, 5);
-//                encoderDrive(DRIVE_SPEED,  12,  12, 5);
-//            }
-//            else if(myPipeline1.getRectMidpointY()>50)
-//            {
-//                telemetry.addData("rectangle midpoint", myPipeline2.getRectMidpointX());
-//                telemetry.update();
-//                rotate(45,0.5f);
-//
-//                encoderDrive(DRIVE_SPEED,  -12,  -12, 5);
-//                encoderDrive(DRIVE_SPEED,  12,  12, 5);
-//                rotate(-90,0.5f);
-//            }
-//            else
-//            {
-//                rotate(-45,0.5f);
-//
-//                encoderDrive(DRIVE_SPEED,  -12,  -12, 5);
-//                encoderDrive(DRIVE_SPEED,  12,  12, 5);
-//                rotate(-45,0.5f);
-////            }
-//
-//            telemetry.addData("rectangle midpoint", myPipeline1.getRectMidpointX());
-//            telemetry.addData("rectangle midpoint", myPipeline2.getRectMidpointX());
             telemetry.update();
 
         }
