@@ -5,7 +5,6 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -13,25 +12,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Scalar;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
 import java.util.List;
+
 @Autonomous
-public class BLUE  extends LinearOpMode {
+public class BLUE extends LinearOpMode {
     private OpenCvCamera webcam1;
     private OpenCvCamera webcam2;
 
@@ -213,9 +205,11 @@ public class BLUE  extends LinearOpMode {
         if(opModeIsActive())
         {
             //encoderDrive(DRIVE_SPEED,  -24,  -24, 5);
+            telemetry.addData("drive", " straight");
+            telemetry.update();
             sleep(200);
             double go = run();
-            telemetry.addData("location", run());
+            telemetry.addData("location pending...", run());
             telemetry.update();
             sleep(3000);
            go= run();
@@ -231,36 +225,54 @@ public class BLUE  extends LinearOpMode {
             }
             else
             {
+                telemetry.addData("NOT ", "Straight");
+                telemetry.update();
                 encoderDrive(1,-24,-24,5);
-                sleep(3000);
+                sleep(5000);
+                telemetry.addData("location pending", run());
+                telemetry.update();
                 go= run();
-                telemetry.addData("straight ahead",go);
+                telemetry.addData("location",go);
+                telemetry.update();
+                sleep(3000);
                 if(go==2)
                 {
-                    rotate(-45,DRIVE_SPEED);
+                    telemetry.addData("drive", " left");
+                    telemetry.update();
+                    rotate(45,DRIVE_SPEED);
                     encoderDrive(1,-12,-12,5);
                     encoderDrive(1,12,12,5);
-                    rotate(-45,DRIVE_SPEED);
+                    rotate(-135,DRIVE_SPEED);
+
 
                 }
                 else
                 {
-                    rotate(45,DRIVE_SPEED);
+                    telemetry.addData("drive", " right");
+                    telemetry.update();
+                    rotate(-45,DRIVE_SPEED);
                     encoderDrive(1,-12,-12,5);
                     encoderDrive(1,12,12,5);
-                    rotate(-135,DRIVE_SPEED);    
+                    rotate(-45,DRIVE_SPEED);    
                 }
-                //LONG
-                //encoderDrive(1,-50,-50,5);                
-                //SHORT
-                //encoderDrive(1,-36,-36,5);
                 //EDGE
-                //rotate(-90,DRIVE_SPEED);
+                telemetry.addData("driving", " to face backboard");
+                telemetry.update();
+                rotate(-45,DRIVE_SPEED);
+
                 //encoderDrive(1,24,24,5);
+                //LONG
+                //SHORT
+                encoderDrive(1,-36,-36,5);
+
                 telemetry.update();
                 sleep(3000);
 
             }
+
+
+            rotate(-85,DRIVE_SPEED);
+            encoderDrive(1,-50,-50,5);
 
 
             telemetry.update();
@@ -301,6 +313,8 @@ public class BLUE  extends LinearOpMode {
             }
         }
         return 1;
+
+        //return myPipeline1.getRectHeight();
     }
 
     public double getA1()

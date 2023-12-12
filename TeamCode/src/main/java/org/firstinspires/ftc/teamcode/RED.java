@@ -31,7 +31,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 @Autonomous
-public class R  extends LinearOpMode {
+public class RED  extends LinearOpMode {
     private OpenCvCamera webcam1;
     private OpenCvCamera webcam2;
 
@@ -209,13 +209,13 @@ public class R  extends LinearOpMode {
             }
         });
         waitForStart();
-//                encoderDrive(1,-24,-24,5);
         if(opModeIsActive())
         {
-            //encoderDrive(DRIVE_SPEED,  -24,  -24, 5);
+            encoderDrive(DRIVE_SPEED,  -24,  -24, 5);
+
             sleep(200);
             double go = run();
-            telemetry.addData("location", run());
+            telemetry.addData("location pending...", run());
             telemetry.update();
             sleep(3000);
            go= run();
@@ -231,36 +231,54 @@ public class R  extends LinearOpMode {
             }
             else
             {
+                telemetry.addData("NOT ", "Straight");
+                telemetry.update();
                 encoderDrive(1,-24,-24,5);
-                sleep(3000);
+                sleep(5000);
+                telemetry.addData("location pending", run());
+                telemetry.update();
                 go= run();
-                telemetry.addData("straight ahead",go);
-                if(go==2)
+                telemetry.addData("location",go);
+                telemetry.update();
+                sleep(3000);
+                if(go==2)// not detecting
                 {
+                    telemetry.addData("drive", " left");
+                    telemetry.update();
                     rotate(45,DRIVE_SPEED);
                     encoderDrive(1,-12,-12,5);
                     encoderDrive(1,12,12,5);
                     rotate(-135,DRIVE_SPEED);
 
+
                 }
                 else
                 {
+                    telemetry.addData("drive", " right");
+                    telemetry.update();
                     rotate(-45,DRIVE_SPEED);
                     encoderDrive(1,-12,-12,5);
                     encoderDrive(1,12,12,5);
                     rotate(-45,DRIVE_SPEED);    
                 }
-                //LONG
-                //encoderDrive(1,-50,-50,5);                
-                //SHORT
-                //encoderDrive(1,-36,-36,5);
                 //EDGE
-                //rotate(-90,DRIVE_SPEED);
+                telemetry.addData("driving", " to face backboard");
+                telemetry.update();
+                //rotate(-45,DRIVE_SPEED);
+
                 //encoderDrive(1,24,24,5);
+                //LONG
+                //SHORT
+                encoderDrive(1,-36,-36,5);
+
                 telemetry.update();
                 sleep(3000);
 
             }
+
+
+            rotate(-85,DRIVE_SPEED); //rotating too far
+            encoderDrive(1,-50,-50,5);
 
 
             telemetry.update();
@@ -301,6 +319,8 @@ public class R  extends LinearOpMode {
             }
         }
         return 1;
+
+        //return myPipeline1.getRectHeight();
     }
 
     public double getA1()

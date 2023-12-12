@@ -147,7 +147,7 @@ public class DriverOp2gamepads extends LinearOpMode {
             if(gamepad2.b){
                 if(trapdoor.getPosition()==0.0){
                     trapdoor.setPosition(1.0);
-                    sleep(800);
+                    sleep(1000);
                     trapdoor.setPosition(0.0);
                 } else{
                     trapdoor.setPosition(0.0);

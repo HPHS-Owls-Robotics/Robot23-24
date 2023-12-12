@@ -16,15 +16,15 @@ import java.util.List;
 
 // Credits to team 7303 RoboAvatars, adjusted by team 3954 Pink to the Future
 
-public class ContourPipeline extends OpenCvPipeline {
+public class ContourPipelineBlue extends OpenCvPipeline {
 
     private static int CAMERA_WIDTH  = 640; // width  of wanted camera resolution
     private static int CAMERA_HEIGHT = 360; // height of wanted camera resolution
 
-    private double CrLowerUpdate = 160;
+    private double CrLowerUpdate = 100;
     private double CbLowerUpdate = 100;
-    private double CrUpperUpdate = 255;
-    private double CbUpperUpdate = 255;
+    private double CrUpperUpdate = 170;
+    private double CbUpperUpdate = 120;
 
     public static double borderLeftX    = 0.0;   //fraction of pixels from the left side of the cam to skip
     public static double borderRightX   = 0.0;   //fraction of pixels from the right of the cam to skip
@@ -35,9 +35,9 @@ public class ContourPipeline extends OpenCvPipeline {
     private double upperruntime = 0;
 
     // Pink Range                                      Y      Cr     Cb
-    public static Scalar scalarLowerYCrCb = new Scalar(  0.0, 160.0, 100.0);
-    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 255.0);
-    Scalar BLUE = new Scalar(196, 240, 100);
+    public static Scalar scalarLowerYCrCb = new Scalar(  30, 220, 100);
+    public static Scalar scalarUpperYCrCb = new Scalar(50, 250, 130);
+    Scalar BLUE = new Scalar(41, 240, 120);
 
     // Pink, the default color                         Y      Cr     Cb    (Do not change Y)
 
@@ -70,7 +70,7 @@ public class ContourPipeline extends OpenCvPipeline {
 
     private final Object sync = new Object();
 
-    public ContourPipeline(double borderLeftX, double borderRightX, double borderTopY, double borderBottomY) {
+    public ContourPipelineBlue(double borderLeftX, double borderRightX, double borderTopY, double borderBottomY) {
         this.borderLeftX = borderLeftX;
         this.borderRightX = borderRightX;
         this.borderTopY = borderTopY;
