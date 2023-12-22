@@ -35,8 +35,10 @@ public class ContourPipelineBlue extends OpenCvPipeline {
     private double upperruntime = 0;
 
     // Pink Range                                      Y      Cr     Cb
-     public static Scalar scalarLowerYCrCb = new Scalar(  0.0, 0.0, 0.0);
-    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 120.0, 120.0);
+//    public static Scalar scalarLowerYCrCb = new Scalar(  0, 0, 0);
+//    public static Scalar scalarUpperYCrCb = new Scalar(0, 0, 0);
+    public static Scalar scalarLowerYCrCb = new Scalar(0, 50, 120);
+    public static Scalar scalarUpperYCrCb = new Scalar(255, 255, 255);
     Scalar BLUE = new Scalar(41, 240, 120);
 
     // Pink, the default color                         Y      Cr     Cb    (Do not change Y)
@@ -126,7 +128,7 @@ public class ContourPipelineBlue extends OpenCvPipeline {
                         MatOfPoint2f areaPoints = new MatOfPoint2f(contourArray);
                         Rect rect = Imgproc.boundingRect(areaPoints);
 
-                        if (                        rect.area() > maxArea
+                        if (rect.area() > maxArea
                                 && rect.x + (rect.width / 2.0)  > (borderLeftX * CAMERA_WIDTH)
                                 && rect.x + (rect.width / 2.0)  < CAMERA_WIDTH - (borderRightX * CAMERA_WIDTH)
                                 && rect.y + (rect.height / 2.0) > (borderTopY * CAMERA_HEIGHT)

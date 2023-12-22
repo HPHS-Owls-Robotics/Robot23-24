@@ -44,14 +44,14 @@ public class BLUE extends LinearOpMode {
     private double upperruntime = 0;
 
     // Pink Range                                      Y      Cr     Cb
-    public static Scalar scalarLowerYCrCb = new Scalar(  0.0, 160.0, 100.0);
+    public static Scalar scalarLowerYCrCb = new Scalar( 50, 130, 0);
     public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 255.0);
 
     // Yellow Range
 //    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 100.0, 0.0);
 //    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 170.0, 120.0);
-    ContourPipelineBlue myPipeline1;
-    ContourPipelineBlue myPipeline2;
+    ContourPipeline myPipeline1;
+    ContourPipeline myPipeline2;
     int color;
 
 
@@ -145,8 +145,8 @@ public class BLUE extends LinearOpMode {
 
         ////////////////////////////////////////////
         color=0;
-        myPipeline1 = new ContourPipelineBlue(borderLeftX,borderRightX,borderTopY,borderBottomY);
-        myPipeline2 = new ContourPipelineBlue(borderLeftX,borderRightX,borderTopY,borderBottomY);
+        myPipeline1 = new ContourPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY);
+        myPipeline2 = new ContourPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY);
         // OpenCV webcam
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
@@ -202,7 +202,7 @@ public class BLUE extends LinearOpMode {
         });
         waitForStart();
 //                encoderDrive(1,-24,-24,5);
-        if(opModeIsActive())
+        while(opModeIsActive())
         {
             //encoderDrive(DRIVE_SPEED,  -24,  -24, 5);
             telemetry.addData("drive", " straight");
@@ -215,64 +215,64 @@ public class BLUE extends LinearOpMode {
            go= run();
             telemetry.addData("location", go);
             telemetry.update();
-            if(go==3)
-            {
-                telemetry.addData("straight ahead",go);
-                telemetry.update();
-                encoderDrive(1,-24,-24,5);
-                encoderDrive(1,24,24,5);
-
-            }
-            else
-            {
-                telemetry.addData("NOT ", "Straight");
-                telemetry.update();
-                encoderDrive(1,-24,-24,5);
-                sleep(5000);
-                telemetry.addData("location pending", run());
-                telemetry.update();
-                go= run();
-                telemetry.addData("location",go);
-                telemetry.update();
-                sleep(3000);
-                if(go==2)
-                {
-                    telemetry.addData("drive", " left");
-                    telemetry.update();
-                    rotate(45,DRIVE_SPEED);
-                    encoderDrive(1,-12,-12,5);
-                    encoderDrive(1,12,12,5);
-                    rotate(-135,DRIVE_SPEED);
-
-
-                }
-                else
-                {
-                    telemetry.addData("drive", " right");
-                    telemetry.update();
-                    rotate(-45,DRIVE_SPEED);
-                    encoderDrive(1,-12,-12,5);
-                    encoderDrive(1,12,12,5);
-                    rotate(-45,DRIVE_SPEED);    
-                }
-                //EDGE
-                telemetry.addData("driving", " to face backboard");
-                telemetry.update();
-                rotate(-45,DRIVE_SPEED);
-
-                //encoderDrive(1,24,24,5);
-                //LONG
-                //SHORT
-                encoderDrive(1,-36,-36,5);
-
-                telemetry.update();
-                sleep(3000);
-
-            }
-
-
-            rotate(-85,DRIVE_SPEED);
-            encoderDrive(1,-50,-50,5);
+//            if(go==3)
+//            {
+//                telemetry.addData("straight ahead",go);
+//                telemetry.update();
+//                encoderDrive(1,-24,-24,5);
+//                encoderDrive(1,24,24,5);
+//
+//            }
+//            else
+//            {
+//                telemetry.addData("NOT ", "Straight");
+//                telemetry.update();
+//                encoderDrive(1,-24,-24,5);
+//                sleep(5000);
+//                telemetry.addData("location pending", run());
+//                telemetry.update();
+//                go= run();
+//                telemetry.addData("location",go);
+//                telemetry.update();
+//                sleep(3000);
+//                if(go==2)
+//                {
+//                    telemetry.addData("drive", " left");
+//                    telemetry.update();
+//                    rotate(45,DRIVE_SPEED);
+//                    encoderDrive(1,-12,-12,5);
+//                    encoderDrive(1,12,12,5);
+//                    rotate(-135,DRIVE_SPEED);
+//
+//
+//                }
+//                else
+//                {
+//                    telemetry.addData("drive", " right");
+//                    telemetry.update();
+//                    rotate(-45,DRIVE_SPEED);
+//                    encoderDrive(1,-12,-12,5);
+//                    encoderDrive(1,12,12,5);
+//                    rotate(-45,DRIVE_SPEED);
+//                }
+//                //EDGE
+//                telemetry.addData("driving", " to face backboard");
+//                telemetry.update();
+//                rotate(-45,DRIVE_SPEED);
+//
+//                //encoderDrive(1,24,24,5);
+//                //LONG
+//                //SHORT
+//                encoderDrive(1,-36,-36,5);
+//
+//                telemetry.update();
+//                sleep(3000);
+//
+//            }
+//
+//
+//            rotate(-85,DRIVE_SPEED);
+//            encoderDrive(1,-50,-50,5);
 
 
             telemetry.update();
@@ -325,7 +325,7 @@ public class BLUE extends LinearOpMode {
     {
         return myPipeline2.getRectArea();
     }
-    public void testing(ContourPipelineBlue myPipeline){
+    public void testing(ContourPipeline myPipeline){
         CrLowerUpdate = inValues(CrLowerUpdate, 0, 255);
         CrUpperUpdate = inValues(CrUpperUpdate, 0, 255);
         CbLowerUpdate = inValues(CbLowerUpdate, 0, 255);
