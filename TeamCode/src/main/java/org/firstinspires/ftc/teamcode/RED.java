@@ -245,10 +245,10 @@ public class RED  extends LinearOpMode {
                 {
                     telemetry.addData("drive", " left");
                     telemetry.update();
-                    rotate(45,DRIVE_SPEED);
-                    encoderDrive(1,-12,-12,5);
-                    encoderDrive(1,12,12,5);
-                    rotate(-135,DRIVE_SPEED);
+                    rotate(50,DRIVE_SPEED);
+                    encoderDrive(1,-20,-20,5);
+                    encoderDrive(1,48,48,5);
+                    rotate(-140,DRIVE_SPEED);
 
 
                 }
@@ -257,9 +257,9 @@ public class RED  extends LinearOpMode {
                     telemetry.addData("drive", " right");
                     telemetry.update();
                     rotate(-45,DRIVE_SPEED);
-                    encoderDrive(1,-12,-12,5);
-                    encoderDrive(1,12,12,5);
-                    rotate(-45,DRIVE_SPEED);    
+                    encoderDrive(1,-20,-20,5);
+                    encoderDrive(1,48,48,5);
+                    rotate(-45,DRIVE_SPEED);
                 }
                 //EDGE
                 telemetry.addData("driving", " to face backboard");
@@ -278,7 +278,7 @@ public class RED  extends LinearOpMode {
 
 
             rotate(-85,DRIVE_SPEED); //rotating too far
-            encoderDrive(1,-50,-50,5);
+            encoderDrive(1,-60,-60,5);
 
 
             telemetry.update();

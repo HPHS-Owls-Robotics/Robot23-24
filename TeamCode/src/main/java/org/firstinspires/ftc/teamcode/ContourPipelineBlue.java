@@ -35,8 +35,8 @@ public class ContourPipelineBlue extends OpenCvPipeline {
     private double upperruntime = 0;
 
     // Pink Range                                      Y      Cr     Cb
-    public static Scalar scalarLowerYCrCb = new Scalar(  30, 220, 100);
-    public static Scalar scalarUpperYCrCb = new Scalar(50, 250, 130);
+     public static Scalar scalarLowerYCrCb = new Scalar(  0.0, 0.0, 0.0);
+    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 120.0, 120.0);
     Scalar BLUE = new Scalar(41, 240, 120);
 
     // Pink, the default color                         Y      Cr     Cb    (Do not change Y)
@@ -113,7 +113,7 @@ public class ContourPipelineBlue extends OpenCvPipeline {
             Imgproc.findContours(processed, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
             // Draw Contours
-            Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0));
+            Imgproc.drawContours(input, contours, -1, new Scalar(0, 255, 0));
 
             // Lock this up to prevent errors when outside threads access the max rect property.
             synchronized (sync) {
@@ -169,7 +169,6 @@ public class ContourPipelineBlue extends OpenCvPipeline {
                     (int) (CAMERA_HEIGHT - (borderBottomY * CAMERA_HEIGHT) - (borderTopY * CAMERA_HEIGHT))
             ), BLUE, 2);
 
-            // Display Data
             Imgproc.putText(input, "Area: " + getRectArea() + " Midpoint: " + getRectMidpointXY().x + " , " + getRectMidpointXY().y, new Point(5, CAMERA_HEIGHT - 5), 0, 0.6, new Scalar(255, 255, 255), 2);
 
             loopCounter++;
