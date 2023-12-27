@@ -5,6 +5,8 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -44,8 +46,8 @@ public class BLUE extends LinearOpMode {
     private double upperruntime = 0;
 
     // Pink Range                                      Y      Cr     Cb
-    public static Scalar scalarLowerYCrCb = new Scalar( 50, 130, 0);
-    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 255.0);
+    public static Scalar scalarLowerYCrCb = new Scalar(0, 50, 50);
+    public static Scalar scalarUpperYCrCb = new Scalar(255.0, 120, 255);
 
     // Yellow Range
 //    public static Scalar scalarLowerYCrCb = new Scalar(0.0, 100.0, 0.0);
@@ -78,19 +80,16 @@ public class BLUE extends LinearOpMode {
     /**
      * The variable to store our instance of the AprilTag processor.
      */
-    private AprilTagProcessor aprilTag;
 
     /**
      * The variable to store our instance of the vision portal.
      */
-    private VisionPortal visionPortal;
-    List<AprilTagDetection> currentDetections;
+
+    AprilTag aprilTag1;
     @Override
     public void runOpMode()
     {
         // Create the AprilTag processor the easy way.
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-
         // Create the vision portal the easy way.
         //Initialize the IMU and its parameters.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -200,9 +199,10 @@ public class BLUE extends LinearOpMode {
                  */
             }
         });
+
         waitForStart();
 //                encoderDrive(1,-24,-24,5);
-        while(opModeIsActive())
+        if(opModeIsActive())
         {
             //encoderDrive(DRIVE_SPEED,  -24,  -24, 5);
             telemetry.addData("drive", " straight");
@@ -215,83 +215,79 @@ public class BLUE extends LinearOpMode {
            go= run();
             telemetry.addData("location", go);
             telemetry.update();
-//            if(go==3)
-//            {
-//                telemetry.addData("straight ahead",go);
-//                telemetry.update();
-//                encoderDrive(1,-24,-24,5);
-//                encoderDrive(1,24,24,5);
-//
-//            }
-//            else
-//            {
-//                telemetry.addData("NOT ", "Straight");
-//                telemetry.update();
-//                encoderDrive(1,-24,-24,5);
-//                sleep(5000);
-//                telemetry.addData("location pending", run());
-//                telemetry.update();
-//                go= run();
-//                telemetry.addData("location",go);
-//                telemetry.update();
-//                sleep(3000);
-//                if(go==2)
-//                {
-//                    telemetry.addData("drive", " left");
-//                    telemetry.update();
-//                    rotate(45,DRIVE_SPEED);
-//                    encoderDrive(1,-12,-12,5);
-//                    encoderDrive(1,12,12,5);
-//                    rotate(-135,DRIVE_SPEED);
-//
-//
-//                }
-//                else
-//                {
-//                    telemetry.addData("drive", " right");
-//                    telemetry.update();
-//                    rotate(-45,DRIVE_SPEED);
-//                    encoderDrive(1,-12,-12,5);
-//                    encoderDrive(1,12,12,5);
-//                    rotate(-45,DRIVE_SPEED);
-//                }
-//                //EDGE
-//                telemetry.addData("driving", " to face backboard");
-//                telemetry.update();
-//                rotate(-45,DRIVE_SPEED);
-//
-//                //encoderDrive(1,24,24,5);
-//                //LONG
-//                //SHORT
-//                encoderDrive(1,-36,-36,5);
-//
-//                telemetry.update();
-//                sleep(3000);
-//
-//            }
-//
-//
-//            rotate(-85,DRIVE_SPEED);
-//            encoderDrive(1,-50,-50,5);
+
+            webcam1.pauseViewport();
+            webcam2.pauseViewport();
+
+            aprilTag1 = new AprilTag(hardwareMap);
+            aprilTag1.initAprilTag();
 
 
-            telemetry.update();
+            if(go==3)
+            {
+                telemetry.addData("straight ahead",go);
+                telemetry.update();
+                encoderDrive(1,-24,-24,5);
+                encoderDrive(1,24,24,5);
 
-        }
-    }
-
-    public void initAprilTag( ) {
-
-
-        currentDetections = aprilTag.getDetections();
-        // Step through the list of detections and display info for each one.
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                int i = detection.id;
             }
-        }
+            else
+            {
+                telemetry.addData("NOT ", "Straight");
+                telemetry.update();
+                encoderDrive(1,-24,-24,5);
+                sleep(5000);
+                telemetry.addData("location pending", run());
+                telemetry.update();
+                go= run();
+                telemetry.addData("location",go);
+                telemetry.update();
+                sleep(3000);
+                if(go==2)
+                {
+                    telemetry.addData("drive", " left");
+                    telemetry.update();
+                    rotate(45,DRIVE_SPEED);
+                    encoderDrive(1,-12,-12,5);
+                    encoderDrive(1,12,12,5);
+                    rotate(-135,DRIVE_SPEED);
 
+
+                }
+                else
+                {
+                    telemetry.addData("drive", " right");
+                    telemetry.update();
+                    rotate(-45,DRIVE_SPEED);
+                    encoderDrive(1,-12,-12,5);
+                    encoderDrive(1,12,12,5);
+                    rotate(-45,DRIVE_SPEED);
+                }
+                //EDGE
+                telemetry.addData("driving", " to face backboard");
+                telemetry.update();
+                rotate(-45,DRIVE_SPEED);
+
+                //encoderDrive(1,24,24,5);
+                //LONG
+                //SHORT
+                encoderDrive(1,-36,-36,5);
+
+                telemetry.update();
+                sleep(3000);
+
+            }
+
+
+            rotate(-85,DRIVE_SPEED);
+            encoderDrive(1,-50,-50,5);
+
+            telemetry.addData("april tag i hope ", aprilTag1.getTag());
+            telemetry.update();
+        }
     }
+
+
     public double run()
     {
         myPipeline1.configureBorders(borderLeftX, borderRightX, borderTopY, borderBottomY);

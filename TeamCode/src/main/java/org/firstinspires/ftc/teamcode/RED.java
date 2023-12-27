@@ -5,7 +5,6 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -18,20 +17,10 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import java.util.List;
 @Autonomous
 public class RED  extends LinearOpMode {
+
+    int tag=0;
     private OpenCvCamera webcam1;
     private OpenCvCamera webcam2;
 
@@ -52,7 +41,7 @@ public class RED  extends LinearOpMode {
     private double upperruntime = 0;
 
     // Pink Range                                      Y      Cr     Cb
-    public static Scalar scalarLowerYCrCb = new Scalar(  0.0, 160.0, 100.0);
+    public static Scalar scalarLowerYCrCb = new Scalar(  0.0,160    , 100.0);
     public static Scalar scalarUpperYCrCb = new Scalar(255.0, 255.0, 255.0);
 
     // Yellow Range
@@ -86,19 +75,16 @@ public class RED  extends LinearOpMode {
     /**
      * The variable to store our instance of the AprilTag processor.
      */
-    private AprilTagProcessor aprilTag;
 
     /**
      * The variable to store our instance of the vision portal.
      */
-    private VisionPortal visionPortal;
-    List<AprilTagDetection> currentDetections;
+
+    AprilTag aprilTag1;
     @Override
     public void runOpMode()
     {
         // Create the AprilTag processor the easy way.
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-
         // Create the vision portal the easy way.
         //Initialize the IMU and its parameters.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -221,6 +207,12 @@ public class RED  extends LinearOpMode {
            go= run();
             telemetry.addData("location", go);
             telemetry.update();
+
+
+            aprilTag1 = new AprilTag(hardwareMap);
+            aprilTag1.initAprilTag();
+
+
             if(go==3)
             {
                 telemetry.addData("straight ahead",go);
@@ -282,22 +274,12 @@ public class RED  extends LinearOpMode {
 
 
             telemetry.update();
-
+            telemetry.addData("april tag i hope ", aprilTag1.getTag());
+            telemetry.update();
         }
     }
 
-    public void initAprilTag( ) {
 
-
-        currentDetections = aprilTag.getDetections();
-        // Step through the list of detections and display info for each one.
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                int i = detection.id;
-            }
-        }
-
-    }
     public double run()
     {
         myPipeline1.configureBorders(borderLeftX, borderRightX, borderTopY, borderBottomY);
@@ -470,7 +452,24 @@ public class RED  extends LinearOpMode {
         globalAngle = 0;
     }
 
+    public void goToTag()
+    {
+       if( aprilTag1.getTag()==tag)
+       {}
+       else if(aprilTag1.getTag()<tag)
+       {}
+       else if(aprilTag1.getTag()>tag)
+       {}
+    }
+    public void driveToTag()
+    {
+        double x = aprilTag1.getX();
+        double y = aprilTag1.getY();
 
+        encoderDrive(DRIVE_SPEED, (float) y,(float) y, 5);
+        if(aprilTag1.getTag()>10)
+        {}
+    }
 
 
 }

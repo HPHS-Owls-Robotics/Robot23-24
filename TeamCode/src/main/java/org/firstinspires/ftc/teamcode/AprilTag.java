@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -105,7 +107,13 @@ import java.util.List;
     /**
      * Add telemetry about AprilTag detections.
      */
+    @SuppressLint("SuspiciousIndentation")// what is this answer me please
     public int getTag() {
+        if(currentDetections.size()==0)
+        {
+            return 0;
+        }
+        else
         return currentDetections.get(0).id;
     }
     public double getX()
